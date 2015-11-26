@@ -1,0 +1,132 @@
+<html>
+	<head>
+		<script src="jquery-2.1.4.min.js"></script>
+		<script type="text/javascript">
+		$(document).ready(function() {
+			var canvas = document.getElementById("game_canvas");
+			canvas.width = document.body.clientWidth; //document.width is obsolete
+			canvas.height = document.body.clientHeight; //document.height is obsolete
+			var context = canvas.getContext("2d");
+
+			// background
+			function drawBackground() { 
+				context.fillStyle = "#7ec0ee";
+				context.fillRect(0, 0, canvas.width, 2*canvas.height/3);
+				context.fillStyle = "#00FF00";
+				context.fillRect(0, 2*canvas.height/3, canvas.width, canvas.height/3);
+			}
+
+			// character
+			var characterX = 300;
+			var characterY = 2*canvas.height/3;
+			var characterYvelocity = 0;
+			var characterXvelocity = 0;
+			function drawCharacter() {
+				context.beginPath();
+				context.arc(characterX, characterY, 70, Math.PI, 2*Math.PI, false);
+				context.closePath();
+				context.lineWidth = 5;
+				context.fillStyle = 'red';
+				context.fill();
+				context.strokeStyle = '#550000';
+				context.stroke();
+
+				// eye
+				context.beginPath();
+				context.arc(characterX+35, characterY-30, 5, 0, 2*Math.PI, false);
+				context.closePath();
+				context.lineWidth = 5;
+				context.fillStyle = 'white';
+				context.fill();
+				context.strokeStyle = '#550000';
+				context.stroke();
+
+				context.beginPath();
+				context.arc(characterX+55, characterY-30, 5, 0, 2*Math.PI, false);
+				context.closePath();
+				context.lineWidth = 5;
+				context.fillStyle = 'white';
+				context.fill();
+				context.strokeStyle = '#550000';
+				context.stroke();
+
+				// mouth
+				context.beginPath();
+				context.arc(characterX+45, characterY-15, 10, 0, Math.PI, false);
+				context.closePath();
+				context.lineWidth = 5;
+				context.fillStyle = 'white';
+				context.fill();
+				context.strokeStyle = '#550000';
+				context.stroke();
+			}
+
+			function drawWorld() {
+				drawBackground();
+				drawCharacter();
+			}
+			drawWorld();
+
+			window.onkeydown = function(e) {
+				var key = e.keyCode ? e.keyCode : e.which;
+				console.log(key);
+
+				switch(key) {
+					case 39:
+						// left
+						characterXvelocity = 10;
+						break;
+					case 37:
+						// right
+						characterXvelocity = -10;
+						break;
+					case 38:
+						// jump
+						console.log("jump");
+						if(characterYvelocity == 0) {
+							characterYvelocity = -20;
+						}
+						break;
+					case 40:
+						// fall
+						console.log("fall");
+						break;
+				}
+			}
+
+			window.onkeyup = function(e) {
+				var key = e.keyCode ? e.keyCode : e.which;
+
+				switch(key) {
+					case 39:
+					case 37:
+						characterXvelocity = 0;
+						break;
+				}
+			}
+
+			setInterval(function() {
+				characterX += characterXvelocity;
+
+				characterY += characterYvelocity;
+
+				if(characterY > 2*canvas.height/3) {
+					//characterYvelocity = 0;
+					characterY = 2*canvas.height/3;
+					characterYvelocity = 0;
+				}
+				else if(characterY < 2*canvas.height/3) {
+					characterYvelocity += 1;
+				}
+
+				console.log(characterY + " ... " + characterYvelocity);
+				drawWorld();
+			}, 1);
+		});
+		</script>
+	</head>
+
+	<body id="body" style="padding: 0px; margin: 0px;">
+		<canvas id="game_canvas"></canvas>
+	</body>
+</html>
