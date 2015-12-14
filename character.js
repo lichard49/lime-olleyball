@@ -4,6 +4,7 @@ function Character(x, y, color, isFacingLeft) {
 	this.y = y;
 	this.xVelocity = 0;
 	this.yVelocity = 0;
+	this.radius = 70;
 	this.isFacingLeft = isFacingLeft ? -1 : 1;
 }
 
@@ -26,22 +27,29 @@ Character.prototype.stop = function() {
 	this.xVelocity = 0;
 }
 
-Character.prototype.tick = function(floorY) {
+Character.prototype.tick = function(world) {
 	this.x += this.xVelocity;
 	this.y += this.yVelocity;
 
-	if(this.y > floorY) {
-		this.y = floorY;
+	if(this.y > world.floorY) {
+		this.y = world.floorY;
 		this.yVelocity = 0;
 	}
-	else if(this.y < floorY) {
+	else if(this.y < world.floorY) {
 		this.yVelocity += 0.5;
+	}
+
+	if(this.x-this.radius < world.floorX) {
+		this.x = world.floorX+this.radius;
+	}
+	else if(this.x+this.radius > world.floorWidth) {
+		this.x = world.floorWidth-this.radius;
 	}
 }
 
 Character.prototype.draw = function(context) {
 	context.beginPath();
-	context.arc(this.x, this.y, 70, Math.PI, 2*Math.PI, false);
+	context.arc(this.x, this.y, this.radius, Math.PI, 2*Math.PI, false);
 	context.closePath();
 	context.lineWidth = 5;
 	context.fillStyle = this.color;

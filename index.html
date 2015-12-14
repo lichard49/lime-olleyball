@@ -19,7 +19,7 @@
 			var player2 = new Character(3*world.floorWidth/4, world.floorY, 'blue', true);
 
 			// ball
-			var ball = new Ball(world.floorWidth/2, world.skyY+world.skyY/2);
+			var ball = new Ball(world.floorWidth/4, world.floorY-200);
 
 			function drawWorld(context) {
 				world.draw(context);
@@ -31,7 +31,6 @@
 
 			window.onkeydown = function(e) {
 				var key = e.keyCode ? e.keyCode : e.which;
-				console.log(key);
 
 				switch(key) {
 					// left arrow
@@ -71,10 +70,10 @@
 
 			setInterval(function() {
 
-				player1.tick(world.floorY);
-				player2.tick(world.floorY);
+				player1.tick(world);
+				player2.tick(world);
 
-				ball.tick(world.floorY, player1, player2);
+				ball.tick(world, [player1, player2]);
 
 				drawWorld(context);
 			}, 1);
