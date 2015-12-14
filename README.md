@@ -1,2 +1,2 @@
 # lime-olleyball
-Remake of the old Java game Slime Volleyball
+Remake of the Java game Slime Volleyball in Javascript

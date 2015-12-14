@@ -1,6 +1,9 @@
-<html>
+	<html>
 	<head>
 		<script src="jquery-2.1.4.min.js"></script>
+		<script src="character.js"></script>
+		<script src="ball.js"></script>
+		<script src="world.js"></script>
 		<script type="text/javascript">
 		$(document).ready(function() {
 			var canvas = document.getElementById("game_canvas");
@@ -9,88 +12,44 @@
 			var context = canvas.getContext("2d");
 
 			// background
-			function drawBackground() { 
-				context.fillStyle = "#7ec0ee";
-				context.fillRect(0, 0, canvas.width, 2*canvas.height/3);
-				context.fillStyle = "#00FF00";
-				context.fillRect(0, 2*canvas.height/3, canvas.width, canvas.height/3);
-			}
+			var world = new World(canvas);
 
 			// character
-			var characterX = 300;
-			var characterY = 2*canvas.height/3;
-			var characterYvelocity = 0;
-			var characterXvelocity = 0;
-			function drawCharacter() {
-				context.beginPath();
-				context.arc(characterX, characterY, 70, Math.PI, 2*Math.PI, false);
-				context.closePath();
-				context.lineWidth = 5;
-				context.fillStyle = 'red';
-				context.fill();
-				context.strokeStyle = '#550000';
-				context.stroke();
+			var player1 = new Character(world.floorWidth/4, world.floorY, 'red', false);
+			var player2 = new Character(3*world.floorWidth/4, world.floorY, 'blue', true);
 
-				// eye
-				context.beginPath();
-				context.arc(characterX+35, characterY-30, 5, 0, 2*Math.PI, false);
-				context.closePath();
-				context.lineWidth = 5;
-				context.fillStyle = 'white';
-				context.fill();
-				context.strokeStyle = '#550000';
-				context.stroke();
+			// ball
+			var ball = new Ball(world.floorWidth/2, world.skyY+world.skyY/2);
 
-				context.beginPath();
-				context.arc(characterX+55, characterY-30, 5, 0, 2*Math.PI, false);
-				context.closePath();
-				context.lineWidth = 5;
-				context.fillStyle = 'white';
-				context.fill();
-				context.strokeStyle = '#550000';
-				context.stroke();
-
-				// mouth
-				context.beginPath();
-				context.arc(characterX+45, characterY-15, 10, 0, Math.PI, false);
-				context.closePath();
-				context.lineWidth = 5;
-				context.fillStyle = 'white';
-				context.fill();
-				context.strokeStyle = '#550000';
-				context.stroke();
+			function drawWorld(context) {
+				world.draw(context);
+				player1.draw(context);
+				player2.draw(context);
+				ball.draw(context);
 			}
-
-			function drawWorld() {
-				drawBackground();
-				drawCharacter();
-			}
-			drawWorld();
+			drawWorld(context);
 
 			window.onkeydown = function(e) {
 				var key = e.keyCode ? e.keyCode : e.which;
 				console.log(key);
 
 				switch(key) {
-					case 39:
-						// left
-						characterXvelocity = 10;
-						break;
-					case 37:
-						// right
-						characterXvelocity = -10;
-						break;
-					case 38:
-						// jump
-						console.log("jump");
-						if(characterYvelocity == 0) {
-							characterYvelocity = -20;
-						}
-						break;
-					case 40:
-						// fall
-						console.log("fall");
-						break;
+					// left arrow
+					case 39: player2.moveLeft(); break;
+					// right arrow
+					case 37: player2.moveRight(); break;
+					// up arrow
+					case 38: player2.jump(); break;
+					// down arrow
+					case 40: console.log("player 1 fall"); break;
+					// 'A'
+					case 68: player1.moveLeft(); break;
+					// 'D'
+					case 65: player1.moveRight(); break;
+					// 'W'
+					case 87: player1.jump(); break;
+					// 'S'
+					case 83: console.log("player 2 fall"); break;
 				}
 			}
 
@@ -98,29 +57,26 @@
 				var key = e.keyCode ? e.keyCode : e.which;
 
 				switch(key) {
+					// cascading switch
 					case 39:
 					case 37:
-						characterXvelocity = 0;
+						player2.stop();
+						break;
+					case 65:
+					case 68:
+						player1.stop();
 						break;
 				}
 			}
 
 			setInterval(function() {
-				characterX += characterXvelocity;
 
-				characterY += characterYvelocity;
+				player1.tick(world.floorY);
+				player2.tick(world.floorY);
 
-				if(characterY > 2*canvas.height/3) {
-					//characterYvelocity = 0;
-					characterY = 2*canvas.height/3;
-					characterYvelocity = 0;
-				}
-				else if(characterY < 2*canvas.height/3) {
-					characterYvelocity += 1;
-				}
+				ball.tick(world.floorY, player1, player2);
 
-				console.log(characterY + " ... " + characterYvelocity);
-				drawWorld();
+				drawWorld(context);
 			}, 1);
 		});
 		</script>
