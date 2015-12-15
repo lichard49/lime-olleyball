@@ -11,15 +11,19 @@ Ball.prototype.tick = function(world, players) {
 	this.y += this.yVelocity;
 
 	if(this.y > world.floorY) {
+		// game over when the ball touches the ground
 		this.xVelocity = 0;
 		this.yVelocity = 0;
 		this.y = world.floorY;
 		//alert("Game over");
 	}
 	else if(this.y < world.floorY) {
+		// apply gravity when not on the ground
 		this.yVelocity += 0.1;
+		this.yVelocity = Math.max(-10, Math.min(10, this.yVelocity));
 	}
 
+	// keep ball in the screen
 	if(this.x > world.floorX + world.floorWidth) {
 		this.xVelocity = -1*this.xVelocity;
 	}
@@ -32,11 +36,21 @@ Ball.prototype.tick = function(world, players) {
 		var distance = Math.trunc(Math.sqrt((this.x-player.x)*(this.x-player.x)+(this.y-player.y)*(this.y-player.y)));
 		var threshold = this.radius+player.radius;
 		if(distance <= threshold) {
-			this.yVelocity = -1.1*(player.y-this.y)/(distance)*(this.yVelocity+this.xVelocity);
-			this.xVelocity = 1.1*(player.x-this.x)/(distance)*(this.yVelocity+this.xVelocity);
+			// elastic collision
+			this.yVelocity = -1.1*(player.y-this.y)/(distance)*(this.yVelocity+player.yVelocity+this.xVelocity+player.xVelocity);
+			this.xVelocity = 1.1*(player.x-this.x)/(distance)*(this.xVelocity+player.xVelocity+this.yVelocity+player.yVelocity);
 
+			// cap the speed
 			this.yVelocity = Math.max(-10, Math.min(10, this.yVelocity));
 			this.xVelocity = Math.max(-10, Math.min(10, this.xVelocity));
+
+			// keep the ball physically out of the slime
+			if(this.x > player.x) {
+				
+				this.y -= 5;
+			}
+			var distance2 = Math.trunc(Math.sqrt((this.x-player.x)*(this.x-player.x)+(this.y-player.y)*(this.y-player.y)));
+			console.log((threshold-distance) + ", " + (threshold-distance2));
 		}
 	}
 }
