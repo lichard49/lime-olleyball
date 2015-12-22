@@ -11,21 +11,43 @@
 			canvas.height = document.body.clientHeight; //document.height is obsolete
 			var context = canvas.getContext("2d");
 
+			// game state
+			var START_SCREEN = 0;
+			var SET_UP_ROUND = 1;
+			var ROUND_IN_PLAY = 2;
+			var CLEAN_UP_ROUND = 3;
+			var GAME_OVER = 4;
+			var gameState = 1;
+			var roundWinner = 0;
+
 			// background
 			var world = new World(canvas);
 
 			// character
-			var player1 = new Character(world.floorWidth/4, world.floorY, 'red', false);
-			var player2 = new Character(3*world.floorWidth/4, world.floorY, 'blue', true);
+			var player1DefaultX = world.floorWidth/4;
+			var player2DefaultX = 3*world.floorWidth/4;
+			var player1DefaultY = world.floorY;
+			var player2DefaultY = world.floorY;
+
+
+			var player1 = new Character(player1DefaultX, player1DefaultY, 'red', false);
+			var player2 = new Character(player2DefaultX, player2DefaultY, 'blue', true);
+
+			var player1Score = 0;
+			var player2Score = 0;
 
 			// ball
-			var ball = new Ball(world.floorWidth/4, world.floorY-200);
+			var ball = new Ball(player1DefaultX, world.floorY-600, player2DefaultX);
 
 			function drawWorld(context) {
 				world.draw(context);
 				player1.draw(context);
 				player2.draw(context);
 				ball.draw(context);
+
+				context.font = "50px Arial";
+				context.fillText(player1Score, world.floorWidth/4, world.floorY+world.floorHeight/2);
+				context.fillText(player2Score, 3*world.floorWidth/4, world.floorY+world.floorHeight/2);
 			}
 			drawWorld(context);
 
@@ -69,13 +91,54 @@
 			}
 
 			setInterval(function() {
+				switch(gameState) {
+					case START_SCREEN:
+						// show menu
+						player1Score = 0;
+						player2Score = 0;
+						// go straight to game for now
+						gameState = SET_UP_ROUND;
+						break;
+					case SET_UP_ROUND:
+						// reset variables
+						player1.reset();
+						player2.reset();
+						ball.reset(roundWinner);
+						gameState = ROUND_IN_PLAY;
+						break;
+					case ROUND_IN_PLAY:
+						// tick
+						player1.tick(world);
+						player2.tick(world);
 
-				player1.tick(world);
-				player2.tick(world);
+						roundWinner = ball.tick(world, [player1, player2]);
+						if(roundWinner > 0) {
+							gameState = CLEAN_UP_ROUND;
+						}
 
-				ball.tick(world, [player1, player2]);
-
-				drawWorld(context);
+						drawWorld(context);
+						break;
+					case CLEAN_UP_ROUND:
+						// ?
+						switch(roundWinner) {
+							case 1:
+								player1Score += 1;
+								break;
+							case 2:
+								player2Score += 1;
+								break;
+						}
+						if(player1Score >= 5 || player2Score >= 5) {
+							gameState = GAME_OVER;
+						}
+						else {
+							gameState = SET_UP_ROUND;
+						}
+						break;
+					case GAME_OVER:
+						// ?
+						break;
+				}
 			}, 1);
 		});
 		</script>

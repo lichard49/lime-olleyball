@@ -2,10 +2,19 @@ function Character(x, y, color, isFacingLeft) {
 	this.color = color;
 	this.x = x;
 	this.y = y;
+	this.defaultX = x;
+	this.defaultY = y;
 	this.xVelocity = 0;
 	this.yVelocity = 0;
 	this.radius = 70;
 	this.isFacingLeft = isFacingLeft ? -1 : 1;
+}
+
+Character.prototype.reset = function() {
+	this.x = this.defaultX;
+	this.y = this.defaultY;
+	this.xVelocity = 0;
+	this.yVelocity = 0;
 }
 
 Character.prototype.moveLeft = function() {

@@ -1,14 +1,34 @@
 var MAX_VELOCITY = 8;
 var MIN_VELOCITY = -1*MAX_VELOCITY;
 
-function Ball(x, y) {
+function Ball(x, y, x2) {
 	this.x = x;
 	this.y = y;
+	this.defaultX1 = x;
+	this.defaultX2 = x2;
+	this.defaultY = y;
 	this.radius = 30;
 	this.xVelocity = 0;
 	this.yVelocity = 0;
 }
 
+Ball.prototype.reset = function(whichDefault) {
+	switch(whichDefault) {
+		case 1:
+			this.x = this.defaultX1;
+			break;
+		case 2:
+			this.x = this.defaultX2;
+			break;
+	}
+	this.y = this.defaultY;
+}
+
+/* 
+ * return 0 if the game is still in play
+ * return 1 if player 1 scores
+ * return 2 if player 2 scores
+ */
 Ball.prototype.tick = function(world, players) {
 	this.x += this.xVelocity;
 	this.y += this.yVelocity;
@@ -19,6 +39,12 @@ Ball.prototype.tick = function(world, players) {
 		this.yVelocity = 0;
 		this.y = world.floorY-this.radius;
 		//alert("Game over");
+		if(this.x > world.floorWidth/2) {
+			return 1;
+		}
+		else {
+			return 2;
+		}
 	}
 	else if(this.y-this.radius < world.floorY) {
 		// apply gravity when not on the ground
@@ -71,6 +97,7 @@ Ball.prototype.tick = function(world, players) {
 			this.xVelocity = Math.max(MIN_VELOCITY, Math.min(MAX_VELOCITY, this.xVelocity));
 		}
 	}
+	return 0;
 }
 
 Ball.prototype.draw = function(context) {
