@@ -45,12 +45,20 @@ Ball.prototype.tick = function(world, players) {
 			this.xVelocity = Math.max(-10, Math.min(10, this.xVelocity));
 
 			// keep the ball physically out of the slime
-			if(this.x > player.x) {
-				
-				this.y -= 5;
-			}
-			var distance2 = Math.trunc(Math.sqrt((this.x-player.x)*(this.x-player.x)+(this.y-player.y)*(this.y-player.y)));
-			console.log((threshold-distance) + ", " + (threshold-distance2));
+			// sin(theta) = opposite/hypotenuse
+			//        /|
+			//       / |
+			//      /  |
+			//     /   |
+			//    /____|
+			//   /     |
+			//  /______|
+			// 1: current, 2: desired
+			// hypotenuse1/base1 = hypotenuse2/base2
+			// distance/(ball.x-player.x) = threshold/(ball.newX-player.x)
+			// -> ball.newX-player.x = (threshold(ball.x-player.x))/distance
+			this.x = (threshold*(this.x-player.x))/distance + player.x;
+			this.y = (threshold*(this.y-player.y))/distance + player.y;
 		}
 	}
 }
