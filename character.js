@@ -41,13 +41,16 @@ Character.prototype.tick = function(world) {
 	this.y += this.yVelocity;
 
 	if(this.y > world.floorY) {
+		// on the ground
 		this.y = world.floorY;
 		this.yVelocity = 0;
 	}
 	else if(this.y < world.floorY) {
+		// falling
 		this.yVelocity += 0.5;
 	}
 
+	// keep character in the screen
 	if(this.x-this.radius < world.floorX) {
 		this.x = world.floorX+this.radius;
 	}
@@ -55,6 +58,7 @@ Character.prototype.tick = function(world) {
 		this.x = world.floorWidth-this.radius;
 	}
 	else if(this.x+this.radius > world.netX && this.x-this.radius < world.netX+world.netWidth) {
+		// handle the net
 		if(this.xVelocity > 0) {
 			this.x = world.netX-this.radius;
 		}

@@ -57,9 +57,11 @@ Ball.prototype.tick = function(world, players) {
 	// keep ball in the screen
 	if(this.x+this.radius > world.floorX+world.floorWidth) {
 		this.xVelocity = -1*this.xVelocity;
+		this.x = world.floorX+world.floorWidth-this.radius;
 	}
 	else if(this.x-this.radius < world.floorX) {
 		this.xVelocity = -1*this.xVelocity;
+		this.x = world.floorX+this.radius;
 	}
 
 	// check for the wall
