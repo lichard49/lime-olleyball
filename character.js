@@ -54,6 +54,14 @@ Character.prototype.tick = function(world) {
 	else if(this.x+this.radius > world.floorWidth) {
 		this.x = world.floorWidth-this.radius;
 	}
+	else if(this.x+this.radius > world.netX && this.x-this.radius < world.netX+world.netWidth) {
+		if(this.xVelocity > 0) {
+			this.x = world.netX-this.radius;
+		}
+		else {
+			this.x = world.netX+world.netWidth+this.radius;
+		}
+	}
 }
 
 Character.prototype.draw = function(context) {

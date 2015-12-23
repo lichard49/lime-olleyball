@@ -40,9 +40,11 @@ Ball.prototype.tick = function(world, players) {
 		this.y = world.floorY-this.radius;
 		//alert("Game over");
 		if(this.x > world.floorWidth/2) {
+			// landed on player 2's side, score for player 1
 			return 1;
 		}
 		else {
+			// vice versa
 			return 2;
 		}
 	}
@@ -58,6 +60,30 @@ Ball.prototype.tick = function(world, players) {
 	}
 	else if(this.x-this.radius < world.floorX) {
 		this.xVelocity = -1*this.xVelocity;
+	}
+
+	// check for the wall
+	var netCenterX = world.netX+world.netWidth/2;
+	var netCenterY = world.netY+world.netHeight/2;
+	var distanceX = Math.abs(this.x-netCenterX);
+	var distanceY = Math.abs(this.y-netCenterY);
+	var distanceSquared = Math.pow(distanceX-world.netWidth/2, 2)+Math.pow(distanceY-world.netHeight/2, 2);
+	if(distanceX > world.netWidth/2+this.radius || distanceY > world.netHeight/2+this.radius) {
+
+	}
+	else {
+		if(distanceX < world.netWidth/2 || distanceY < world.netHeight/2 ||
+			distanceSquared < Math.pow(this.radius, 2)) {
+
+			console.log();
+
+			if(this.x > this.netX && this.x < this.netX+this.netWidth) {
+				this.yVelocity = -1*this.yVelocity;
+			}
+			else {
+				this.xVelocity = -1*this.xVelocity;
+			}
+		}
 	}
 
 	for(var i = 0, player; player = players[i]; i++) {
