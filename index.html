@@ -46,10 +46,22 @@
 				ball.draw(context);
 
 				context.font = "50px Arial";
+				context.fillStyle = "white";
 				context.fillText(player1Score, world.floorWidth/4, world.floorY+world.floorHeight/2);
 				context.fillText(player2Score, 3*world.floorWidth/4, world.floorY+world.floorHeight/2);
 			}
 			drawWorld(context);
+
+			function drawWinner(winner) {
+				context.font = "50px Arial";
+				context.fillStyle = "white";
+				var text = " wins!";
+				switch(winner) {
+					case 1: text = "Lime"+text; break;
+					case 2: text = "Lemon"+text; break;
+				}
+				context.fillText(text, world.floorWidth/2-120, world.floorY+world.floorHeight/2);
+			}
 
 			window.onkeydown = function(e) {
 				var key = e.keyCode ? e.keyCode : e.which;
@@ -96,15 +108,18 @@
 						// show menu
 						player1Score = 0;
 						player2Score = 0;
+
 						// go straight to game for now
 						gameState = SET_UP_ROUND;
+
 						break;
 					case SET_UP_ROUND:
 						// reset variables
 						player1.reset();
 						player2.reset();
-						ball.reset(roundWinner);
+						ball.reset(roundWinner == 1 ? 2 : 1);
 						gameState = ROUND_IN_PLAY;
+
 						break;
 					case ROUND_IN_PLAY:
 						// tick
@@ -117,9 +132,10 @@
 						}
 
 						drawWorld(context);
+
 						break;
 					case CLEAN_UP_ROUND:
-						// ?
+						// increment scores
 						switch(roundWinner) {
 							case 1:
 								player1Score += 1;
@@ -128,15 +144,20 @@
 								player2Score += 1;
 								break;
 						}
+
+						// end of game?
 						if(player1Score >= 5 || player2Score >= 5) {
 							gameState = GAME_OVER;
 						}
 						else {
 							gameState = SET_UP_ROUND;
 						}
+
 						break;
 					case GAME_OVER:
 						// ?
+						drawWorld(context);
+						drawWinner(player1Score > player2Score ? 1 : 2);
 						break;
 				}
 			}, 1);
