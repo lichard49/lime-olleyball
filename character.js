@@ -69,6 +69,7 @@ Character.prototype.tick = function(world) {
 }
 
 Character.prototype.draw = function(context) {
+	// body
 	context.beginPath();
 	context.arc(this.x, this.y, this.radius, Math.PI, 2*Math.PI, false);
 	context.closePath();
@@ -77,6 +78,14 @@ Character.prototype.draw = function(context) {
 	context.fill();
 	context.strokeStyle = '#550000';
 	context.stroke();
+	var img;
+	if(this.isFacingLeft > 0) {
+		img = document.getElementById("lime");
+	}
+	else {
+		img = document.getElementById("lemon");
+	}
+	context.drawImage(img, this.x-this.radius, this.y-this.radius, this.radius*2, this.radius);
 
 	// eye
 	context.beginPath();
