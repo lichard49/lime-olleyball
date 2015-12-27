@@ -19,8 +19,9 @@
 			var ROUND_IN_PLAY = 2;
 			var CLEAN_UP_ROUND = 3;
 			var GAME_OVER = 4;
-			var gameState = 1;
+			var gameState = START_SCREEN;
 			var roundWinner = 0;
+			var startButtonPressed = false;
 
 			// background
 			var world = new World(canvas);
@@ -65,10 +66,20 @@
 				context.fillText(text, world.floorWidth/2-120, world.floorY+world.floorHeight/2);
 			}
 
+			function drawTitle() {
+				context.font = "100px Arial";
+				context.fillStyle = "white";
+				context.fillText("Lime Olleyball", world.floorWidth/2-300, world.floorY/2);
+				context.font = "50px Arial";
+				context.fillText("Press enter to start", world.floorWidth/2-200, world.floorY/2+100);
+			}
+
 			window.onkeydown = function(e) {
 				var key = e.keyCode ? e.keyCode : e.which;
-
+				console.log(key);
 				switch(key) {
+					// enter
+					case 13: startButtonPressed = true; break;
 					// left arrow
 					case 39: player2.moveLeft(); break;
 					// right arrow
@@ -112,7 +123,15 @@
 						player2Score = 0;
 
 						// go straight to game for now
-						gameState = SET_UP_ROUND;
+						//gameState = SET_UP_ROUND;
+
+						drawWorld(context);
+						drawTitle();
+
+						if(startButtonPressed) {
+							gameState = SET_UP_ROUND;
+							startButtonPressed = false;
+						}
 
 						break;
 					case SET_UP_ROUND:

@@ -79,7 +79,7 @@ Ball.prototype.tick = function(world, players) {
 
 			console.log();
 
-			if(this.x+this.radius > world.netX && this.x-this.radius < world.netX+world.netWidth) {
+			if(this.x > world.netX && this.x < world.netX+world.netWidth) {
 				// hitting top of wall means bounce up
 				this.yVelocity = -1*this.yVelocity;
 				this.y -= this.radius;
