@@ -64,12 +64,16 @@
 					case 2: text = "Lemon"+text; break;
 				}
 				context.fillText(text, world.floorWidth/2-120, world.floorY+world.floorHeight/2);
+
+				context.font = "50px Arial";
+				context.fillText("Press enter to go back to the main menu", world.floorWidth/2-400, world.floorY/2+100);
 			}
 
 			function drawTitle() {
 				context.font = "100px Arial";
 				context.fillStyle = "white";
 				context.fillText("Lime Olleyball", world.floorWidth/2-300, world.floorY/2);
+
 				context.font = "50px Arial";
 				context.fillText("Press enter to start", world.floorWidth/2-200, world.floorY/2+100);
 			}
@@ -179,6 +183,12 @@
 						// ?
 						drawWorld(context);
 						drawWinner(player1Score > player2Score ? 1 : 2);
+
+						if(startButtonPressed) {
+							gameState = START_SCREEN;
+							startButtonPressed = false;
+						}
+
 						break;
 				}
 			}, 1);
