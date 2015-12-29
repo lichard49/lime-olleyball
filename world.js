@@ -1,16 +1,16 @@
-function World(canvas) {
+function World(canvas, screenRatio) {
 	this.skyX = 0;
 	this.skyY = 0;
 	this.skyWidth = canvas.width;
-	this.skyHeight = 2*canvas.height/3;
+	this.skyHeight = canvas.height-200/screenRatio;
 
 	this.floorX = 0;
-	this.floorY = 2*canvas.height/3;
+	this.floorY = canvas.height-200/screenRatio;
 	this.floorWidth = canvas.width;
-	this.floorHeight = canvas.height/3;
+	this.floorHeight = 200/screenRatio;
 
-	this.netWidth = 50;
-	this.netHeight = 100;
+	this.netWidth = 50/screenRatio;
+	this.netHeight = 100/screenRatio;
 	this.netX = canvas.width/2-this.netWidth/2;
 	this.netY = this.floorY-this.netHeight;
 }

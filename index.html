@@ -9,6 +9,7 @@
 		<script type="text/javascript">
 		$(document).ready(function() {
 			// maximize canvas size while maintaining proportions
+			var baseWidth = 1920;
 			var documentWidth = document.body.clientWidth;
 			var documentHeight = document.body.clientHeight;
 			var canvasRatio = 1.9; // width/height
@@ -23,6 +24,8 @@
 				canvas.height = documentHeight;
 			}
 			var context = canvas.getContext("2d");
+			var screenRatio = baseWidth/canvas.width;
+			console.log(documentWidth);
 
 			// game state
 			var START_SCREEN = 0;
@@ -35,7 +38,7 @@
 			var startButtonPressed = false;
 
 			// background
-			var world = new World(canvas);
+			var world = new World(canvas, screenRatio);
 
 			// character
 			var player1DefaultX = world.floorWidth/4;
@@ -43,15 +46,14 @@
 			var player1DefaultY = world.floorY;
 			var player2DefaultY = world.floorY;
 
-
-			var player1 = new Character(player1DefaultX, player1DefaultY, 'red', false);
-			var player2 = new Character(player2DefaultX, player2DefaultY, 'blue', true);
+			var player1 = new Character(player1DefaultX, player1DefaultY, 'red', false, screenRatio);
+			var player2 = new Character(player2DefaultX, player2DefaultY, 'blue', true, screenRatio);
 
 			var player1Score = 0;
 			var player2Score = 0;
 
 			// ball
-			var ball = new Ball(player1DefaultX, world.floorY-600, player2DefaultX);
+			var ball = new Ball(player1DefaultX, world.floorY-600/screenRatio, player2DefaultX, screenRatio);
 
 			function drawWorld(context, clear) {
 				if(clear) {

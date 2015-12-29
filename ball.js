@@ -1,15 +1,15 @@
-var MAX_VELOCITY = 8;
-var MIN_VELOCITY = -1*MAX_VELOCITY;
-
-function Ball(x, y, x2) {
+function Ball(x, y, x2, screenRatio) {
 	this.x = x;
 	this.y = y;
 	this.defaultX1 = x;
 	this.defaultX2 = x2;
 	this.defaultY = y;
-	this.radius = 30;
+	this.radius = 30/screenRatio;
 	this.xVelocity = 0;
 	this.yVelocity = 0;
+	this.MAX_VELOCITY = 8/screenRatio;
+	this.MIN_VELOCITY = -1*this.MAX_VELOCITY;
+
 }
 
 Ball.prototype.reset = function(whichDefault) {
@@ -51,7 +51,7 @@ Ball.prototype.tick = function(world, players) {
 	else if(this.y-this.radius < world.floorY) {
 		// apply gravity when not on the ground
 		this.yVelocity += 0.1;
-		this.yVelocity = Math.max(MIN_VELOCITY, Math.min(MAX_VELOCITY, this.yVelocity));
+		this.yVelocity = Math.max(this.MIN_VELOCITY, Math.min(this.MAX_VELOCITY, this.yVelocity));
 	}
 
 	// keep ball in the screen
@@ -132,8 +132,8 @@ Ball.prototype.tick = function(world, players) {
 			this.xVelocity = 1.5*(player.x-this.x)/(distance)*(this.xVelocity+player.xVelocity+this.yVelocity+player.yVelocity);
 
 			// cap the speed
-			this.yVelocity = Math.max(MIN_VELOCITY, Math.min(MAX_VELOCITY, this.yVelocity));
-			this.xVelocity = Math.max(MIN_VELOCITY, Math.min(MAX_VELOCITY, this.xVelocity));
+			this.yVelocity = Math.max(this.MIN_VELOCITY, Math.min(this.MAX_VELOCITY, this.yVelocity));
+			this.xVelocity = Math.max(this.MIN_VELOCITY, Math.min(this.MAX_VELOCITY, this.xVelocity));
 		}
 	}
 	return 0;

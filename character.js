@@ -1,4 +1,4 @@
-function Character(x, y, color, isFacingLeft) {
+function Character(x, y, color, isFacingLeft, screenRatio) {
 	this.color = color;
 	this.x = x;
 	this.y = y;
@@ -6,8 +6,10 @@ function Character(x, y, color, isFacingLeft) {
 	this.defaultY = y;
 	this.xVelocity = 0;
 	this.yVelocity = 0;
-	this.radius = 70;
+	this.radius = 70/screenRatio;
 	this.isFacingLeft = isFacingLeft ? -1 : 1;
+	this.HORIZONTAL_ACCELERATION = 5/screenRatio;
+	this.VERTICAL_ACCELERATION = -10/screenRatio;
 }
 
 Character.prototype.reset = function() {
@@ -18,17 +20,17 @@ Character.prototype.reset = function() {
 }
 
 Character.prototype.moveLeft = function() {
-	this.xVelocity = 5;
+	this.xVelocity = this.HORIZONTAL_ACCELERATION;
 }
 
 Character.prototype.moveRight = function() {
-	this.xVelocity = -5;
+	this.xVelocity = -1*this.HORIZONTAL_ACCELERATION;
 }
 
 Character.prototype.jump = function() {
 	// jump only if we're on the ground
 	if(this.yVelocity == 0) {
-		this.yVelocity = -10;
+		this.yVelocity = this.VERTICAL_ACCELERATION;
 	}
 }
 
