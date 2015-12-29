@@ -8,9 +8,20 @@
 		<script src="world.js"></script>
 		<script type="text/javascript">
 		$(document).ready(function() {
+			// maximize canvas size while maintaining proportions
+			var documentWidth = document.body.clientWidth;
+			var documentHeight = document.body.clientHeight;
+			var canvasRatio = 1.9; // width/height
+
 			var canvas = document.getElementById("game_canvas");
-			canvas.width = document.body.clientWidth; //document.width is obsolete
-			canvas.height = document.body.clientHeight; //document.height is obsolete
+			if(documentWidth/canvasRatio < documentHeight) {
+				canvas.width = documentWidth;
+				canvas.height = documentWidth/canvasRatio;
+			}
+			else {
+				canvas.width = documentHeight*canvasRatio;
+				canvas.height = documentHeight;
+			}
 			var context = canvas.getContext("2d");
 
 			// game state
@@ -202,7 +213,9 @@
 	</head>
 
 	<body id="body" style="padding: 0px; margin: 0px;">
-		<canvas id="game_canvas"></canvas>
+		<center>
+			<canvas id="game_canvas"></canvas>
+		</center>
 		<img id="lime" src="res/lime.png" style="display: none;" />
 		<img id="lemon" src="res/lemon.png" style="display: none;" />
 	</body>
